@@ -13,11 +13,11 @@ default:
 # 在线评测系统开发及升级
 
 <div class="inline-block text-left mt-6">
-报告人：颜俊梁
-
-学号：917106840244
-
-指导老师：余立功
+  <div>
+    <p class="flex justify-between"><div class="w-24 text-justify">报告人：</div><div class="w-36 text-center">颜俊梁</div></p> 
+    <p class="flex justify-between"><div class="w-24 text-justify">学号：</div><div class="w-36 text-center">917106840244</div></p> 
+    <p class="flex justify-between"><div class="w-24 text-justify">指导老师：</div><div class="w-36 text-center">余立功</div></p> 
+  </div>
 </div>
 
 <!--
