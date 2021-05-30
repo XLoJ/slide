@@ -218,6 +218,7 @@ sequenceDiagram
     分布式判题节点 ->> MinIO 对象存储: 测试数据缺失
     MinIO 对象存储 -->> 分布式判题节点: 下载测试数据
     分布式判题节点 -->> Web 后端: 评测结果
+    Web 后端 ->> Web 后端: 更新提交状态
     deactivate 分布式判题节点
   end
   loop 运行状态

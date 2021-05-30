@@ -39,12 +39,14 @@
 }
 
 .slidev-layout.mermaid-container {
-  @apply h-full grid;
+  @apply h-full;
 
   .mermaid {
+    @apply flex justify-center;
+    
     svg {
-      transform: scale(0.8);
-      @apply -mt-16;
+      transform: scale(0.72);
+      @apply -mt-20;
     }
   }
 }
