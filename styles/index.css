@@ -1,0 +1,50 @@
+@import "./ghcolors.css";
+
+.slidev-layout {
+  @apply py-6 px-8;
+}
+
+.slidev-layout.list {
+  @apply h-full grid;
+
+  h1 {
+    @apply bg-none border-b-2 border-gray-700 text-gray-700;
+    @apply text-3xl leading-16;
+    @apply mb-4 pl-4;
+  }
+
+  h1 + * {
+    @apply pt-2;
+  }
+
+  ol {
+    @apply text-2xl mr-16 mt-24 pl-2;
+  }
+}
+
+.slidev-layout.default,
+.slidev-layout.mermaid-container {
+  h1 {
+    @apply bg-none border-b-2 border-gray-700 text-gray-700;
+    @apply text-3xl leading-16;
+  }
+
+  h1 + * {
+    @apply pt-2;
+  }
+
+  h1 + p {
+    @apply opacity-100;
+  }
+}
+
+.slidev-layout.mermaid-container {
+  @apply h-full grid;
+
+  .mermaid {
+    svg {
+      transform: scale(0.8);
+      @apply -mt-16;
+    }
+  }
+}
