@@ -27,7 +27,7 @@ The last comment block of each slide will be treated as slide notes. It will be 
 ---
 
 <div class="flex justify-center mt-16">
-  <img src="home.png" alt="首页" style="zoom: 32%;" />
+  <img src="/home.png" alt="首页" style="zoom: 32%;" />
 </div>
 
 ---
@@ -102,7 +102,7 @@ Learn more: https://sli.dev/guide/syntax#embedded-styles
 # 系统架构
 
 <div class="flex justify-center">
-  <img src="struct.png" alt="系统架构" style="zoom:61%;" />
+  <img src="/struct.png" alt="系统架构" style="zoom:61%;" />
 </div>
 
 <!-- 本项目开发的系统包含用户交互的 Web 前端，系统逻辑的处理的 Web 后端，分布式判题节点和其它一些数据持久化中间件等部分 -->
@@ -112,7 +112,7 @@ Learn more: https://sli.dev/guide/syntax#embedded-styles
 # 功能模块
 
 <div class="flex justify-center">
-  <img src="feature.png" alt="功能模块" style="zoom:50%;" />
+  <img src="/feature.png" alt="功能模块" style="zoom:50%;" />
 </div>
 
 ---
@@ -200,7 +200,7 @@ layout: Mermaid
 # 题目评测流程
 
 <!-- <div class="flex justify-center">
-  <img src="struct.png" alt="系统架构" style="zoom:61%;" />
+  <img src="/struct.png" alt="系统架构" style="zoom:61%;" />
 </div> -->
 
 ```mermaid
@@ -246,7 +246,7 @@ sequenceDiagram
 # 程序设计竞赛试题创建系统
 
 <div class="flex justify-center">
-  <img src="polygon.png" alt="polygon" style="zoom:36%;" />
+  <img src="/polygon.png" alt="polygon" style="zoom:36%;" />
 </div>
 
 ---
@@ -349,7 +349,7 @@ class UserAuthFilter(
 # 试题构建
 
 <div class="flex justify-center">
-  <img src="flow.png" alt="flow" style="zoom:50%;" />
+  <img src="/flow.png" alt="flow" style="zoom:50%;" />
 </div>
 
 ---
