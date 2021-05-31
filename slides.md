@@ -195,11 +195,29 @@ class: text-center
 
 # 判题沙盒
 
-判题节点是一个在线评测系统的核心部分。
+判题节点是在线评测系统的 **核心部分**，也是在线评测系统中 **最脆弱的部分**。
 
-判题节点恰好是整个系统服务器端中最脆弱的部分
+<div v-click>
+  <div class="inline-flex justify-center absolute left-10">
+    <img src="/aplusb.png" alt="A + B" style="zoom:50%;" />
+  </div>
 
-判题节点不可避免地需要执行用户发送的不受信任的代码，这些代码很有可能会对服务器进行一些攻击操作
+  <div class="inline-flex justify-center absolute left-80 top-50">
+    <img src="/ac.png" alt="AC" style="zoom:45%;" />
+  </div>
+
+  <div class="inline-flex justify-center absolute right-20 top-50">
+    <img src="/rmrf.png" alt="rm -rf" style="zoom:45%;" />
+  </div>
+</div>
+
+---
+
+# 沙盒安全
+
+判题节点不可避免地需要执行用户发送的 **不受信任的代码**。
+
+这些代码很有可能会对服务器进行一些攻击操作：
 
 + 文件系统攻击
 
@@ -208,6 +226,16 @@ class: text-center
 + 非法的进程或线程操作
 
 + 编译器攻击
+
++ ......
+
+<div v-click>
+
+<br />
+
+使用 C++ 语言，Linux 系统内核提供**命名空间和 cgroups 等机制**，实现了一个**判题沙盒**。
+
+</div>
 
 <!-- 
 ```c++
@@ -219,22 +247,42 @@ int main() {
 -->
 
 ---
+class: intro2
+---
 
 # 命名空间
 
-命名空间机制实现了对各种系统资源的隔离。
+命名空间机制实现了**对各种系统资源的隔离**。
 
-以挂载点命名空间为例，实现了内核级别的文件目录隔离。
+挂载点命名空间 mnt 实现了内核级别的文件目录隔离。
 
+```mermaid
+graph TD
+  A(创建一个新的临时 mnt 命名空间)
+  B(用户进程切换到临时的 mnt 命名空间下)
+  C(将宿主机的文件根目录从中剔除)
+  D(使用一个空目录替换为虚拟的根目录)
+  E(将运行程序必要的文件以只读形式挂载到虚拟根目录中)
+	A --> B
+	B --> C
+	C --> D
+  D --> E
+```
+
+<!-- 
 1. 准备一个临时的目录用于作为虚拟的根目录
 
 2. 创建程序进程时切换到沙盒提供的临时 mnt 命名空间内
 
 2. 将宿主机的文件目录从临时命名空间中剔除，使得新创建的进程无法访问原有宿主机的文件系统
 
-3. 将提前创建好的虚拟根目录挂载到新进程当中，将程序运行必要的目录只读地挂载回新的命名空间
+3. 将提前创建好的虚拟根目录挂载到新进程当中，将程序运行必要的目录只读地挂载回新的命名空间 -->
 
-```cpp
+<!--
+
+命名空间
+
+
 if (mount("/", "/", NULL, MS_REC | MS_PRIVATE, NULL) == -1) {
   PLOG_E("mount('/', '/', NULL, MS_REC|MS_PRIVATE, NULL)");
   return false;
@@ -243,13 +291,14 @@ if (mount(NULL, destdir->c_str(), "tmpfs", 0, "size=16777216") == -1) {
   PLOG_E("mount('%s', 'tmpfs')", destdir->c_str());
   return false;
 }
-```
+
+-->
 
 ---
 
 # CGroups
 
-Linux 内核的 cgroups 实现了对于进程资源的追踪，限制和隔离，例如 CPU ，内存，磁盘等资源。
+CGroups 机制实现了对于**进程资源的追踪和限制**，例如 CPU，内存和磁盘等。
 
 使用 setrlimit 系统调用可以用来限制进程的资源占用。
 
@@ -268,6 +317,67 @@ if (setrlimit64(RLIMIT_NPROC, &rl) == -1) {
    return false;
 }
 ```
+
+<div class="absolute" style="top: 14.5rem; left: 22rem;"><mdi-arrow-right-bold class="inline-block pb-1" />地址空间大小</div> 
+
+<div class="absolute" style="top: 19rem; left: 22rem;"><mdi-arrow-right-bold class="inline-block pb-1" />CPU 时间</div> 
+
+<div class="absolute" style="top: 24rem; left: 22rem;"><mdi-arrow-right-bold class="inline-block pb-1" />子进程数量</div> 
+
+---
+
+# 判题沙盒防御实例
+
+恶意代码试图执行 `rm -rf / --no-preserve-root` 命令删除文件系统。
+
+```c
+#include <stdlib.h>
+
+int main() {
+  system("rm -rf / --no-preserve-root");
+}
+```
+
+<p v-click>
+使用 strace 跟踪它执行的系统调用：
+
+```text
+13202 1622479041.760245 execve("/usr/bin/rm", ["rm", "-rf", "/", "--no-preserve-root"], ...)
+```
+</p>
+
+<p v-click>
+但是，所有执行删除的系统调用都失败了：
+
+```text
+13202 1622479041.787068 unlinkat(5, "protocols", 0) = -1 EROFS (Read-only file system)
+13202 1622479041.787306 newfstatat(5, "protocols", {st_mode=S_IFREG|0644, st_size=2932, ...}, AT_SYMLINK_NOFOLLOW) = 0
+13202 1622479041.787697 write(2, "rm: ", 4) = 4
+13202 1622479041.787922 write(2, "cannot remove '/etc/protocols'", 30) = 30
+13202 1622479041.788154 write(2, ": Read-only file system", 23) = 23
+13202 1622479041.788375 write(2, "\n", 1) = 1
+```
+</p>
+
+---
+
+# 分布式判题节点
+
+运行选手提交的程序会消耗大量的时间。
+
+为了提高吞吐量，让很多判题沙盒同时工作。
+
+<div v-click>
+
+引出了三个问题：
+
++ 判题节点与 Web 后端之间的通信
+
++ 判题节点之间的并发调度
+
++ 判题节点中题目数据的获取
+
+</div>
 
 ---
 layout: Mermaid

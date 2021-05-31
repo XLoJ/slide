@@ -49,6 +49,17 @@
   }
 }
 
+.intro2 {
+  .mermaid {
+    @apply flex justify-center;
+    
+    svg {
+      transform: scale(0.8);
+      @apply -mt-10;
+    }
+  }
+}
+
 .slidev-layout.mermaid-container {
   @apply h-full;
 
