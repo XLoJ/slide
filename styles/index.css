@@ -52,10 +52,8 @@
 .intro2 {
   .mermaid {
     @apply flex justify-center;
-    width: 500px;
     
     svg {
-      width: 500px;
       transform: scale(0.8);
       @apply -mt-10;
     }
@@ -67,8 +65,8 @@
     @apply flex justify-center;
     
     svg {
-      transform: scale(0.56);
-      @apply -mt-40;
+      transform: scale(0.8);
+      @apply -mt-10;
     }
   }
 }
