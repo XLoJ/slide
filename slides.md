@@ -414,6 +414,14 @@ sequenceDiagram
 ```
 
 ---
+
+# 分布式判题节点
+
+<div class="flex justify-center mt-16">
+  <img src="/judge.png" alt="评测" style="zoom: 50%;" />
+</div>
+
+---
 layout: cover
 class: text-center
 ---
