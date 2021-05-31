@@ -432,15 +432,15 @@ class: text-center
 
 # 程序设计竞赛试题创建系统
 
-传统的在线评测系统中的题目创建都是简单地使用文件上传的方式进行的。
+传统的在线评测系统中的题目创建都是采用文件上传的方式。
 
 存在的问题：
 
-1. 用户上传错误的文件
+1. 难以管理大量测试数据
 
-2. 无法保证上传数据的输入是符合期望的
+2. 出题人的本地运行环境和评测节点的运行环境不一致
 
-3. 出题人的本地运行环境和评测节点的运行环境不一致
+3. 输入数据出现错误，不符合题目描述
 
 ---
 
@@ -452,110 +452,122 @@ class: text-center
 
 ---
 
-# 数据库
+# 程序设计竞赛试题
 
-```kotlin
-interface User : Entity<User> {
-  companion object : Entity.Factory<User>()
-  var id: Long
-  var username: String
-  var nickname: String
-  var password: String
-}
-object Users : Table<User>("users") {
-  val id = long("id").primaryKey().bindTo { it.id }
-  val username = text("username").bindTo { it.username }
-  val nickname = text("nickname").bindTo { it.nickname }
-  val password = text("password").bindTo { it.password }
-}
-```
++ 时间和空间限制
++ 题面描述
++ **测试数据**
 
----
+<div v-click>
 
-# 数据库
+**测试数据必须正确**。
 
-```kotlin
-database.users.find { it.id eq id }
-```
+测试数据通常使用以下两种方法：
 
-```sql
-select * from users where username = 'admin'
-```
++ 手动构造
++ 编写代码生成
 
----
-
-# Rest API
-
-```kotlin
-@RestController
-@RequestMapping("/")
-class UserController(
-  private val userService: UserService
-) {
-  @PostMapping("/login")
-  fun login(@Valid @RequestBody loginDto: UserLoginDto): UserLoginResponse {
-    return userService.login(loginDto.username, loginDto.password)
-  }
-  @GetMapping("/profile")
-  fun getMyProfile(@RequestAttribute user: UserProfile): UserProfile {
-    return user
-  }
-}
-```
-
----
-
-# 过滤器
-
-```kotlin
-class UserAuthFilter(
-  private val jwtService: JWTService,
-  private val userRepository: UserRepository
-) : Filter {
-  override fun doFilter(
-    request: ServletRequest, response: ServletResponse, chain: FilterChain
-  ) {
-    val req = request as HttpServletRequest
-    val auth = req.getHeader(HttpHeaders.AUTHORIZATION)
-    if (auth != null) {
-      val optionalUsername = jwtService.verify(auth)
-      if (optionalUsername.isPresent) {
-        chain.doFilter(request, response)
-      } else {
-        makeUnAuthorizeResponse(response, "JWT 错误")
-      }
-    } else {
-      makeUnAuthorizeResponse(response, "尚未登录")
-    }
-  }
-}
-```
-
----
-
-# 试题创建流程
-
-1. 设置试题元信息，即时间限制和空间限制的信息，以及题面描述信息。
-
-2. 上传试题正确解法代码和其它需要测试的解法代码
-
-3. 上传试题的输入数据校验器代码，并对数据校验器进行测试
-
-4. 上传试题静态数据和相关数据生成器代码，配置数据生成器的生成命令。
-
-5. 运行试题的生成和验证过程
-
----
-
-# 试题构建
-
-<div class="flex justify-center">
-  <img src="/flow.png" alt="flow" style="zoom:50%;" />
 </div>
 
 ---
 
-# 试题更新
+# 测试数据
+
+<div class="flex justify-start">
+  <img src="/aplusb.png" alt="A + B" style="zoom:50%;" />
+</div>
+
+<h4 class="mt-4 mb-4">
+  <mdi-close-thick class="inline text-red-500 mb-1" /> 测试数据：
+</h4>
+
+
+```text
+-1 -2
+```
+
+---
+
+# 测试数据
+
+数据校验器：
+
+```cpp
+#include "testlib.h"
+
+using namespace std;
+
+int main(int argc, char* argv[]) {
+  registerValidation(argc, argv);
+  inf.readInt(0, 1000000000, "a");
+  inf.readSpace();
+  inf.readInt(0, 1000000000, "b");
+  inf.readEoln();
+  inf.readEof();
+}
+```
+
+数据 <span class="code px-1">-1 -2</span> 将会输出如下错误日志：
+
+```text
+FAIL Integer parameter [name=a] equals to -1, violates the range [0, 10^9] (stdin, line 1)
+```
+
+<style>
+.code {
+  font-family: "Fira Code", monospace;
+  font-size: 0.9em;
+  background: var(--prism-background);
+  border-radius: 0.25rem;
+  font-weight: 300;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+}
+</style>
+
+---
+
+# 试题的组成
+
++ 时间和空间限制
++ 题面描述
++ **正确解法**
++ **数据校验器**
++ **数据生成器**
++ **静态数据**
+
+---
+class: intro3
+---
+
+# 试题的构建
+
+<!-- <div class="flex justify-center">
+  <img src="/flow.png" alt="flow" style="zoom:50%;" />
+</div> -->
+
+```mermaid
+graph TD
+  A(开始构建试题)
+  B(下载代码和静态数据)
+  C(编译所有代码)
+  D{测试数据类型}
+  E(生成输入文件)
+  F(数据校验)
+  G(使用正确解法生成输出文件)
+	A --> B
+	B --> C
+	C --> D
+  D --> E
+  D --> F
+  E --> F
+  F --> G
+  G --> D
+```
+
+---
+
+# 试题的更新
 
 1. 处理题目修改请求，获取待修改的题目编号和修改的内容；
 

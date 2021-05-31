@@ -8,6 +8,9 @@ export default defineMermaidSetup(() => {
       messageMargin: 35,
       boxTextMargin: 10,
       bottomMarginAdj: 10
+    },
+    flow: {
+      width: "100%"
     }
   }
 })
