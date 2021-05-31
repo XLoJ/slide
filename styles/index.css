@@ -65,8 +65,8 @@
     @apply flex justify-center;
     
     svg {
-      transform: scale(0.8);
-      @apply -mt-10;
+      transform: scale(0.6);
+      @apply -mt-40;
     }
   }
 }
