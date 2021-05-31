@@ -25,12 +25,6 @@ The last comment block of each slide will be treated as slide notes. It will be 
 -->
 
 ---
-
-<div class="flex justify-center mt-16">
-  <img src="/home.png" alt="首页" style="zoom: 32%;" />
-</div>
-
----
 layout: Contents
 ---
 
@@ -38,11 +32,72 @@ layout: Contents
 
 1. 引言
 
-2. 系统实现
+2. 系统模块与架构
 
 3. 分布式判题节点
 
 4. 程序设计竞赛试题创建系统
+
+---
+layout: cover
+class: text-center
+---
+
+# 1. 引言
+
+---
+class: intro
+---
+
+# 引言
+
+<div v-click="1">
+目前，计算机相关专业的学习在世界范围内掀起了热潮，越来越多的人接触到了计算机，开始学习程序设计。
+
+计算机专业是一门理论和实践结合十分紧密的学科。
+</div>
+
+<p v-click="2">
+在线评测系统广泛应用于计算机课程的教学和程序设计竞赛的训练之中。
+</p>
+
+<div v-click="3">
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant 用户
+  participant 在线评测系统
+  participant 测试数据
+
+  用户 ->> 在线评测系统: 程序代码
+  activate 在线评测系统
+  在线评测系统 ->> 在线评测系统: 编译代码
+  测试数据 ->> 在线评测系统: 题目数据
+  在线评测系统 ->> 用户: 使用测试数据运行代码
+  deactivate 在线评测系统
+
+```
+
+</div>
+
+<p v-click="4">
+在本毕业设计项目中，开发了一个全新的在线评测系统，为学生学习和训练提供一个舒适的平台。
+</p>
+
+<!-- 很多在线评测系统存在各种各样的问题：
+
+1. 学生使用的角度上，界面简陋，缺乏数学公式等内容的渲染；（图片）
+
+2. 管理员使用的角度上，缺乏用户角色和权限管理机制，题目创建功能过于简单；
+
+3. 评测系统设计实现的角度上，评测节点不支持动态扩展，运行学生提交的代码时可能存在安全隐患。 -->
+
+---
+
+<div class="flex justify-center mt-16">
+  <img src="/home.png" alt="首页" style="zoom: 32%;" />
+</div>
 
 <!-- # What is Slidev?
 
@@ -67,35 +122,11 @@ Learn more: https://sli.dev/guide/syntax#embedded-styles
 -->
 
 ---
-
-# 引言
-
-目前，计算机相关专业的学习在世界范围内掀起了热潮，越来越多的人接触到了计算机，开始学习程序设计。
-
-在线评测系统广泛应用于计算机课程的教学和程序设计竞赛的训练之中。
-
-很多在线评测系统存在各种各样的问题：
-
-1. 学生使用的角度上，界面简陋，缺乏数学公式等内容的渲染；（图片）
-
-2. 管理员使用的角度上，缺乏用户角色和权限管理机制，题目创建功能过于简单；
-
-3. 评测系统设计实现的角度上，评测节点不支持动态扩展，运行学生提交的代码时可能存在安全隐患。
-
-因此，在本毕业设计项目中，我开发了一个全新的在线评测系统，以解决这些问题，为学生学习和训练提供一个舒适的平台，
-同时方便管理者对用户，题目和比赛进行管理，使得系统能够组织更大规模的程序设计竞赛。
-
+layout: cover
+class: text-center
 ---
 
-# 系统实现
-
-+ 使用 JVM 平台上的 Kotlin 语言，基于 Spring 系列框架开发了在线评测系统的 Web 后端，
-
-+ 使用前端框架 Vue.js 开发了在线评测系统的 Web 前端
-
-+ 基于 C++ 语言开发的 Linux 沙盒
-
-+ 使用 TypeScript 语言和 Node.js 平台开发了分布式判题节点
+# 2. 系统模块与架构
 
 ---
 
@@ -109,11 +140,56 @@ Learn more: https://sli.dev/guide/syntax#embedded-styles
 
 ---
 
+# 系统实现
+
++ Web 后端：JVM 平台上的 Kotlin 语言和 Spring 系列框架
+
++ Web 前端：JavaScript 语言和前端框架 Vue.js
+
++ Linux 判题沙盒：C++ 语言
+
++ 分布式判题节点：TypeScript 语言和 Node.js 平台
+
+---
+clicks: 5
+---
+
 # 功能模块
 
++ 用户模块 <mdi-arrow-right-bold v-click="1" class="inline-block" /> <span v-click="1" class="inline-block">注册与登录</span>
+
++ 比赛模块 <mdi-arrow-right-bold v-click="2" class="inline-block" /> <span v-click="2" class="inline-block">组织线上或线下程序设计比赛</span>
+
++ 题库模块 <mdi-arrow-right-bold v-click="3" class="inline-block" /> <span v-click="3" class="inline-block">用户平时的编程练习</span>
+
++ 评测模块 <mdi-arrow-right-bold v-click="4" class="inline-block" /> <span v-click="4" class="inline-block">评测运行用户提交的程序代码</span>
+
++ 试题创建系统 <mdi-arrow-right-bold v-click="5" class="inline-block" /> <span v-click="5" class="inline-block">创建程序设计竞赛试题</span>
+
+<style>
+ul li {
+  height: 2rem;
+  line-height: 1;
+
+  div {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+</style>
+
+<!-- 
 <div class="flex justify-center">
-  <img src="/feature.png" alt="功能模块" style="zoom:50%;" />
-</div>
+  <img src="/mod.png" alt="模块" style="zoom: 80%;" />
+</div> -->
+
+
+---
+layout: cover
+class: text-center
+---
+
+# 3. 分布式判题节点
 
 ---
 
@@ -226,6 +302,13 @@ sequenceDiagram
     Web 后端 -->> Web 前端: 提交代码运行状态
   end
 ```
+
+---
+layout: cover
+class: text-center
+---
+
+# 4. 程序设计竞赛试题创建系统
 
 ---
 
