@@ -567,7 +567,7 @@ graph TD
 
 ---
 
-# 试题的更新
+# 试题的并发更新
 
 1. 处理题目修改请求，获取待修改的题目编号和修改的内容；
 
@@ -575,17 +575,51 @@ graph TD
 
 3. 如果是代码或者静态数据，则要将代码和静态数据上传至 MinIO 对象存储服务器中。
 
----
+<br>
 
-# 试题并发更新
+<div v-click>
 
-测试数据文件非常大。
-
-$10^6$ 个正整数的测试数据文件大小有 $30$ MB。
+测试数据文件非常大（$10^6$ 个正整数的测试数据文件大小有 $10$ MB）。
 
 生成，上传和下载测试数据将会消耗大量时间。
 
-将会暴露出巨大的数据竞争并发漏洞。
+如果不进行保护，将会暴露出巨大的数据竞争并发漏洞。
+
+</div>
+
+---
+
+# 试题的并发更新
+
+1. 分布式锁
+
++ 每个正在编辑的题目都对应一把锁；
+
++ 当接收到题目的更新或者构建请求时，尝试获得锁；
+
++ 当请求处理失败后，释放持有的锁。
+
+<div v-click>
+
+2. 版本号命名
+
++ 文件存储服务器中，所有文件命名时携带当前版本号；
+
++ 例如：版本 $3$ 的 <span class="code px-1">solution.cpp</span> 文件，命名为 <span class="code px-1">3-solution.cpp</span>。
+
+</div>
+
+<style>
+.code {
+  font-family: "Fira Code", monospace;
+  font-size: 0.9em;
+  background: var(--prism-background);
+  border-radius: 0.25rem;
+  font-weight: 300;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+}
+</style>
 
 ---
 layout: cover
